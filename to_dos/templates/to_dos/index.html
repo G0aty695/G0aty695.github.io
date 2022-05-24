@@ -1,0 +1,15 @@
+{% extends "to_dos/base.html" %}
+
+{% block page_header %}
+    <div class="jumbotron">
+        <h1 class="display-3">Stay on top of your work.</h1>
+        <p class="lead">Stay on track by makeing a to do list.
+            This isn't just your run of the mill checklist,
+            it's an online run of the mill checklist!
+        </p>
+
+    <a class="btn btn-lg btn-primary" href="{% url 'users:register' %}"
+        role="button">Register &raquo;</a>
+</div>
+{% endblock page_header %}
+

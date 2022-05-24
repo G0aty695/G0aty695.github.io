@@ -1,0 +1,17 @@
+{% extends "to_dos/base.html" %}
+
+{% block content %}
+
+
+<p>Delete Job</p>
+
+<p>Are you sure you want to delete this job?: {{ job.name }}</p>
+
+<a href="{% url 'to_dos/jobs.html' %}">back</a>
+
+<form action="" method="post">
+{% csrf_token %}
+<input type="submit" value="Delete">
+</form>
+
+{% endblock content %}

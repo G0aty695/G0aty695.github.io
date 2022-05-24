@@ -1,0 +1,22 @@
+{% extends "to_dos/base.html" %}
+
+{% block page_header %}
+    <h1>Jobs</h1>
+{% endblock page_header %}
+
+{% block content %}
+    
+    <ul>
+        {% for job in jobs %}
+            <li><h3>
+                {{ job }}
+            </h3></li>
+            <a href="{% url 'to_dos:delete_job' job.id %}" class="btn btn-outline-danger btn-sm">Done?</a>
+        {% empty %}
+            <li><h3>Looks like you have nothing to do</h3></li>
+        {% endfor %}
+    </ul>
+
+    <h3><a href="{% url 'to_dos:new_job' %}">Add a new job</a></h3>
+
+{% endblock content %}
