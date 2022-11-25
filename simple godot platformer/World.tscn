@@ -103,5 +103,8 @@ position = Vector2( 75, 42 )
 normal = ExtResource( 2 )
 
 [connection signal="pressed" from="Left" to="Player" method="_on_Left_pressed"]
+[connection signal="released" from="Left" to="Player" method="_on_Left_released"]
 [connection signal="pressed" from="Right" to="Player" method="_on_Right_pressed"]
+[connection signal="released" from="Right" to="Player" method="_on_Right_released"]
 [connection signal="pressed" from="Jump" to="Player" method="_on_Jump_pressed"]
+[connection signal="released" from="Jump" to="Player" method="_on_Jump_released"]

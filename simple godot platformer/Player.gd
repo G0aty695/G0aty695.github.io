@@ -20,6 +20,10 @@ var dashing = false
 var dash_timer = 5
 var wall_jump_direction
 
+var mobile_left = false
+var mobile_right = false
+var mobile_jump = false
+
 func die():
 	translation = Vector3(0, 0, 0)
 
@@ -71,19 +75,19 @@ func _process(delta):
 		velocity_y = 0
 	
 	# Inputs
-	if Input.is_action_pressed("left"):
+	if Input.is_action_pressed("left") or mobile_left:
 		velocity_x -= speed
 		facing = "left"
-	if Input.is_action_pressed("right"):
+	if Input.is_action_pressed("right") or mobile_right:
 		velocity_x += speed
 		facing = "right"
-	if Input.is_action_just_pressed("jump") and touching_ground:
+	if (Input.is_action_just_pressed("jump") or mobile_jump) and touching_ground:
 		if not Input.is_key_pressed(KEY_W):
 			if get_viewport().get_mouse_position().y < 200:
 				jumping = true
 		else:
 			jumping = true
-	if Input.is_action_just_pressed("jump") and not touching_ground and touching_any_wall:
+	if (Input.is_action_just_pressed("jump") or mobile_jump) and not touching_ground and touching_any_wall:
 		wall_jumping = true
 		if touching_left_wall:
 			wall_jump_direction = "right"
@@ -136,22 +140,24 @@ func _process(delta):
 
 
 func _on_Left_pressed():
-	velocity_x -= speed
-	facing = "left"
+	mobile_left = true
 
 
 func _on_Right_pressed():
-	velocity_x += speed
-	facing = "right"
+	mobile_right = true
 
 
 func _on_Jump_pressed():
-	if touching_ground:
-		jumping = true
-	if not touching_ground and touching_any_wall:
-		wall_jumping = true
-		if touching_left_wall:
-			wall_jump_direction = "right"
-		if touching_right_wall:
-			wall_jump_direction = "left"
-		jumping = true
+	mobile_jump = true
+
+
+func _on_Left_released():
+	mobile_left = false
+
+
+func _on_Right_released():
+	mobile_right = false
+
+
+func _on_Jump_released():
+	mobile_jump = false
