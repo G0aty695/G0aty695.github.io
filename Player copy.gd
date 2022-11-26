@@ -5,7 +5,7 @@ var velocity_x = 0
 var velocity_y = 0
 var velocity_z = 0
 var gravity = 0
-var speed = 7
+var speed = 6
 var facing = "left"
 var touching_ground
 var touching_left_wall
@@ -17,27 +17,47 @@ var jumping
 var wall_jumping
 var wall_jump_stage = 0
 var dashing = false
-var dash_timer = 5
+var dash_timer = 10
+var dash_cooldown = 0
 var wall_jump_direction
 
-var mobile_left = false
-var mobile_right = false
-var mobile_jump = false
+var level = 0
+var rng = RandomNumberGenerator.new()
 
+var shake 
+
+
+func screen_shake(max_roll, intensity):
+	# Shake the camera at a set intensity 
+	$Camera.rotation = Vector3(0, 0, max_roll * intensity * rand_range(-1, 1))
+	$Camera.translate(Vector3(intensity * intensity * rand_range(-1, 1), intensity * intensity * rand_range(-1, 1), 0))
+
+func defualt_camera():
+	# Return the camera to its normal position and state
+	$Camera.translation = Vector3(0, 0, 6.197)
+	$Camera.rotation_degrees = Vector3(0, 0, 0)
+	
 func die():
 	translation = Vector3(0, 0, 0)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	rng.randomize()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	# reset all timers
-	if dash_timer == 0:
-		dash_timer = 5
+	
+	# logic for all timers
+	if dash_timer < 0 and dashing:
+		print(dash_timer)
 		dashing = false
+		dash_cooldown = 20
+		defualt_camera()
+	
+	if dash_cooldown > 0:
+		dash_cooldown -= 1
+	
 		
 	# Sets up contact boloons
 	if touching_left_wall or touching_right_wall:
@@ -63,44 +83,43 @@ func _process(delta):
 		touching_roof = false
 		
 	# Add gravity
-	print(touching_ground)
 	if not touching_ground:
 		if not touching_any_wall:
 			gravity -= 0.4
+			velocity_y = gravity
 		else:
-			gravity -= 0.03
-		velocity_y = gravity
+			gravity = 0 - 1
+			velocity_y = gravity
 	else:
 		gravity = 0
 		velocity_y = 0
 	
 	# Inputs
-	if Input.is_action_pressed("left") or mobile_left:
+	if Input.is_action_pressed("left"):
 		velocity_x -= speed
 		facing = "left"
-	if Input.is_action_pressed("right") or mobile_right:
+	if Input.is_action_pressed("right"):
 		velocity_x += speed
 		facing = "right"
-	if (Input.is_action_just_pressed("jump") or mobile_jump) and touching_ground:
+	if Input.is_action_just_pressed("jump") and touching_ground:
 		if not Input.is_key_pressed(KEY_W):
 			if get_viewport().get_mouse_position().y < 200:
 				jumping = true
 		else:
 			jumping = true
-	if (Input.is_action_just_pressed("jump") or mobile_jump) and not touching_ground and touching_any_wall:
-		wall_jumping = true
-		if touching_left_wall:
-			wall_jump_direction = "right"
-		if touching_right_wall:
-			wall_jump_direction = "left"
+	if Input.is_action_just_pressed("jump") and not touching_ground and touching_any_wall:
 		jumping = true
 		
-		if Input.is_action_pressed("dash") and dashing == false:
-			dashing = true
+	if Input.is_action_just_pressed("dash") and dashing == false and dash_cooldown == 0:
+		Input.start_joy_vibration(1, 10, 10, 2000)
+		dashing = true
+		dash_cooldown = 20
+		dash_timer = 10
 		
 	
 	if dashing:
 		dash_timer -= 1
+		screen_shake(0.01, 0.3)
 		if facing == "left":
 			velocity_x = 0 -speed * 3
 		else:
@@ -114,16 +133,9 @@ func _process(delta):
 	if jump_stage == 20 or not Input.is_action_pressed("jump"):
 		jump_stage = 0
 		jumping = false
+
 		
-	if wall_jumping:
-		wall_jump_stage += 1
-		if wall_jump_direction == "left":
-			velocity_x -= 3
-		if wall_jump_direction == "right":
-			velocity_x += 3
-	if wall_jump_stage == 20 or not touching_any_wall:
-		wall_jump_stage = 0
-		wall_jumping = false
+		
 	
 	
 	
@@ -131,33 +143,10 @@ func _process(delta):
 	velocity_x = 0
 	velocity_y = 0
 	velocity_z = 0
-	print(gravity)
-	
-	
 	
 
+	
 
 
 
-func _on_Left_pressed():
-	mobile_left = true
 
-
-func _on_Right_pressed():
-	mobile_right = true
-
-
-func _on_Jump_pressed():
-	mobile_jump = true
-
-
-func _on_Left_released():
-	mobile_left = false
-
-
-func _on_Right_released():
-	mobile_right = false
-
-
-func _on_Jump_released():
-	mobile_jump = false
