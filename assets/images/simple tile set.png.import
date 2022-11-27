@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/index.apple-touch-icon.png-8085a11cc297d91deb55511843765958.stex"
+path="res://.import/simple tile set.png-74094285ba9889aacad67b2625f8814d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://index.apple-touch-icon.png"
-dest_files=[ "res://.import/index.apple-touch-icon.png-8085a11cc297d91deb55511843765958.stex" ]
+source_file="res://assets/images/simple tile set.png"
+dest_files=[ "res://.import/simple tile set.png-74094285ba9889aacad67b2625f8814d.stex" ]
 
 [params]
 

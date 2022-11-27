@@ -26,16 +26,14 @@ var respawn_position = Vector2(0, 0)
 
 var deaths = 0
 
-var level = 0
-
-
+var level = 1
 
 
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	position = Vector2(0, 0)
+	position = Vector2(200, 0)
 
 
 func die():
@@ -90,10 +88,9 @@ func _process(delta):
 			respawn_position = Vector2(11200, -500)
 		if level == 11:
 			respawn_position = Vector2(14000, -500)
-		if level == 13:
-			respawn_position = Vector2(19000, -500)
-		deaths = 0
 		die()
+		deaths = 0
+		
 	print(level)
 		
 	if not on_ground:
@@ -107,18 +104,18 @@ func _process(delta):
 		if jumping:
 			jumping = false
 	
-	if Input.is_action_pressed("left"):
+	if Input.is_action_pressed("left1"):
 		velocity_x -= speed
 		facing = "left"
-	if Input.is_action_pressed("right"):
+	if Input.is_action_pressed("right1"):
 		velocity_x += speed
 		facing = "right"
-	if Input.is_action_just_pressed("jump") and (on_ground or touching_wall):
+	if Input.is_action_just_pressed("jump1") and (on_ground or touching_wall):
 		gravity -= 800
 		jumping = true
-	if Input.is_action_just_pressed("dash") and dash_timer == 20:
+	if Input.is_action_just_pressed("dash1") and dash_timer == 20:
 		dashing = true
-	if Input.is_action_just_pressed("pogo") and not pogoing:
+	if Input.is_action_just_pressed("pogo1") and not pogoing:
 		pogoing = true
 	
 		
